@@ -1,0 +1,42 @@
+replicaCount: 2
+image:
+  repository: null
+  pullPolicy: IfNotPresent
+  tag: null
+imagePullSecrets: null
+service:
+  appPort: 8080
+  httpPort: 80
+  managementPort: 8081
+
+ingress:
+  enabled: false
+  ingressClassName: nginx
+  ingressList: []
+
+metrics:
+  enabled: false
+  prometheusRule:
+    enabled: false
+    
+resources: {}
+
+healthChecks:
+  enable: false
+  probs:
+    livenessProbe:
+      httpGet:
+        path: /health
+        port: management
+      initialDelaySeconds: 60
+      failureThreshold: 15
+      periodSeconds: 5
+    readinessProbe:
+      httpGet:
+        path: /health
+        port: management
+      initialDelaySeconds: 60
+      failureThreshold: 15
+      periodSeconds: 5
+      
+env: {}

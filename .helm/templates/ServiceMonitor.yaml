@@ -1,0 +1,14 @@
+{{- if and ( .Values.metrics.enabled) -}}
+{{- $dot := . }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: "{{ $dot.Release.Name}}-service-monitor"
+spec:
+  endpoints:
+    - path: /metrics
+      port: management
+  selector:
+    matchLabels:
+      app: "{{ $dot.Release.Name }}"
+{{- end}}

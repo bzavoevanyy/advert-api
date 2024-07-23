@@ -1,0 +1,68 @@
+replicaCount: 1
+image:
+  repository: cr.yandex/crpjdlmipj8ktcf128ra/advert-api
+  pullPolicy: IfNotPresent
+  tag: 0.0.4-SNAPSHOT
+
+service:
+  appPort: 8080
+  httpPort: 80
+  managementPort: 8081
+
+ingress:
+  enabled: true
+  ingressList:
+    - name: external
+      annotations:
+        cert-manager.io/cluster-issuer: "yc-clusterissuer"
+        nginx.ingress.kubernetes.io/rewrite-target: /$2
+        nginx.ingress.kubernetes.io/x-forwarded-host: "true"
+        nginx.ingress.kubernetes.io/x-forwarded-prefix: "/advert-api"
+      tls:
+        - hosts: [ bz-otus-project.fun ]
+          secretName: domain-name-secret
+      rules:
+        - host: bz-otus-project.fun
+          http:
+            paths:
+              - path: /advert-api(/|$)(.*)
+                pathType: Prefix
+                backend:
+                  service:
+                    name: "{{ .Release.Name }}-service"
+                    port:
+                      name: http
+metrics:
+  enabled: true
+    
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1024M
+  requests:
+    cpu: 1000m
+    memory: 1024M
+
+healthChecks:
+  enable: true
+  probs:
+    livenessProbe:
+      httpGet:
+        path: /health
+        port: management
+      initialDelaySeconds: 60
+      failureThreshold: 15
+      periodSeconds: 5
+    readinessProbe:
+      httpGet:
+        path: /health
+        port: management
+      initialDelaySeconds: 60
+      failureThreshold: 15
+      periodSeconds: 5
+      
+env:
+  configs:
+    JAVA_OPTS: "-XX:+PrintCommandLineFlags -XX:+UseG1GC -XX:MaxRAMPercentage=75 -Djava.security.egd=file:/dev/./urandom -Djava.net.preferIPv4Stack=true"
+    SPRING_DATASOURCE_URL: jdbc:postgresql://rc1a-nwixcs8py5vtt9vn.mdb.yandexcloud.net:6432/advert?ssl=false&sslmode=disable
+    SPRING_DATASOURCE_HIKARI_MAXIMUM-POOL-SIZE: 5
