@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: cr.yandex/crpjdlmipj8ktcf128ra/advert-api
   pullPolicy: IfNotPresent
-  tag: 0.0.4-SNAPSHOT
+  tag: latest
 
 service:
   appPort: 8080
