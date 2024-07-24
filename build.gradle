@@ -41,6 +41,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.flywaydb/flyway-database-postgresql
     runtimeOnly "org.flywaydb:flyway-database-postgresql:${flywayVersion}"
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-api
+    testImplementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.6.0'
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
     runtimeOnly 'org.postgresql:postgresql'
